@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Companies - Market Watchdog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <h2 class="mb-4">Companies</h2>
+
+    <form method="GET" action="/companies" class="row g-2 mb-4">
+      <div class="col-md-5">
+        <input type="text" name="search" class="form-control" placeholder="Search by name or country..." value="<%= search %>">
+      </div>
+      <div class="col-md-4">
+        <select name="industry" class="form-select">
+          <option value="">All Industries</option>
+          <% industries.forEach(ind => { %>
+            <option value="<%= ind %>" <%= selectedIndustry === ind ? 'selected' : '' %>><%= ind %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      </div>
+    </form>
+
+    <p class="text-muted">Showing <%= companies.length %> companies</p>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Industry</th>
+            <th>Country</th>
+            <th>Revenue ($/mo)</th>
+            <th>Traffic</th>
+            <th>Growth Score</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (companies.length === 0) { %>
+            <tr><td colspan="8" class="text-center text-muted">No companies found.</td></tr>
+          <% } else { %>
+            <% companies.forEach((c, i) => { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><%= c.name %></td>
+                <td><%= c.industry %></td>
+                <td><%= c.country %></td>
+                <td>$<%= c.estimatedMonthlyRevenue.toLocaleString() %></td>
+                <td><%= c.trafficEstimate.toLocaleString() %></td>
+                <td>
+                  <span class="badge bg-<%= c.growthSignalScore >= 7 ? 'success' : c.growthSignalScore >= 4 ? 'warning' : 'secondary' %>">
+                    <%= c.growthSignalScore.toFixed(1) %>
+                  </span>
+                </td>
+                <td><a href="/companies/<%= c.id %>" class="btn btn-sm btn-outline-primary">View</a></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Market Watchdog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">Market Watchdog</a>
+      <div>
+        <a href="/login" class="btn btn-outline-light btn-sm me-2">Login</a>
+        <a href="/register" class="btn btn-primary btn-sm">Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 text-center">
+    <h1 class="display-4 fw-bold">Market Watchdog</h1>
+    <p class="lead text-muted">Competitive intelligence and company monitoring platform.</p>
+    <p class="text-muted">Track companies, monitor promotions, compare competitors, and receive market alerts.</p>
+    <div class="mt-4">
+      <a href="/register" class="btn btn-primary btn-lg me-3">Get Started</a>
+      <a href="/login" class="btn btn-outline-secondary btn-lg">Login</a>
+    </div>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-danger mt-4"><%= error %></div>
+    <% } %>
+  </div>
+</body>
+</html>

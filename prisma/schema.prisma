@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  email             String             @unique
+  password          String
+  name              String
+  role              String             @default("USER")
+  isBlocked         Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  comparisons       ComparisonHistory[]
+  activityLogs      UserActivityLog[]
+}
+
+model Company {
+  id                        Int          @id @default(autoincrement())
+  name                      String       @unique
+  industry                  String
+  country                   String
+  website                   String
+  estimatedMonthlyRevenue   Float
+  trafficEstimate           Int
+  conversionRate            Float
+  averageOrderValue         Float
+  marketActivityScore       Float
+  growthSignalScore         Float
+  createdAt                 DateTime     @default(now())
+  promotions                Promotion[]
+  alerts                    Alert[]
+  snapshots                 Snapshot[]
+  comparisonsA              ComparisonHistory[] @relation("CompanyA")
+  comparisonsB              ComparisonHistory[] @relation("CompanyB")
+}
+
+model Promotion {
+  id          Int       @id @default(autoincrement())
+  companyId   Int
+  title       String
+  description String
+  discount    Float
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime  @default(now())
+  company     Company   @relation(fields: [companyId], references: [id])
+}
+
+model Alert {
+  id          Int       @id @default(autoincrement())
+  companyId   Int
+  type        String
+  message     String
+  severity    String    @default("INFO")
+  createdAt   DateTime  @default(now())
+  company     Company   @relation(fields: [companyId], references: [id])
+}
+
+model Snapshot {
+  id                      Int       @id @default(autoincrement())
+  companyId               Int
+  revenue                 Float
+  traffic                 Int
+  conversionRate          Float
+  marketActivityScore     Float
+  growthSignalScore       Float
+  snapshotDate            DateTime  @default(now())
+  company                 Company   @relation(fields: [companyId], references: [id])
+}
+
+model ComparisonHistory {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  companyAId      Int
+  companyBId      Int
+  resultSummary   String
+  createdAt       DateTime  @default(now())
+  user            User      @relation(fields: [userId], references: [id])
+  companyA        Company   @relation("CompanyA", fields: [companyAId], references: [id])
+  companyB        Company   @relation("CompanyB", fields: [companyBId], references: [id])
+}
+
+model UserActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}

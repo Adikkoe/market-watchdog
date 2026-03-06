@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alerts - Market Watchdog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <h2 class="mb-4">Market Alerts</h2>
+
+    <p class="text-muted">Total: <%= alerts.length %> alerts</p>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th>Type</th>
+            <th>Message</th>
+            <th>Severity</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (alerts.length === 0) { %>
+            <tr><td colspan="6" class="text-center text-muted">No alerts found.</td></tr>
+          <% } else { %>
+            <% alerts.forEach((a, i) => { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><a href="/companies/<%= a.company.id %>"><%= a.company.name %></a></td>
+                <td><%= a.type %></td>
+                <td><%= a.message %></td>
+                <td>
+                  <span class="badge bg-<%= a.severity === 'HIGH' ? 'danger' : a.severity === 'MEDIUM' ? 'warning' : 'secondary' %>">
+                    <%= a.severity %>
+                  </span>
+                </td>
+                <td><%= new Date(a.createdAt).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

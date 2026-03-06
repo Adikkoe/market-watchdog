@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= company.name %> - Market Watchdog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <a href="/companies" class="btn btn-outline-secondary btn-sm mb-3">&larr; Back to Companies</a>
+
+    <h2 class="mb-1"><%= company.name %></h2>
+    <p class="text-muted mb-4"><%= company.industry %> &bull; <%= company.country %> &bull; <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
+
+    <!-- Metrics -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="card border-primary">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Monthly Revenue</h6>
+            <h4>$<%= company.estimatedMonthlyRevenue.toLocaleString() %></h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-info">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Traffic Estimate</h6>
+            <h4><%= company.trafficEstimate.toLocaleString() %></h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-success">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Conversion Rate</h6>
+            <h4><%= company.conversionRate.toFixed(2) %>%</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-warning">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Avg Order Value</h6>
+            <h4>$<%= company.averageOrderValue.toFixed(2) %></h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Market Activity Score</h6>
+            <h4><%= company.marketActivityScore.toFixed(1) %> / 10</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Growth Signal Score</h6>
+            <h4><%= company.growthSignalScore.toFixed(1) %> / 10</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Promotions -->
+    <h4 class="mb-3">Recent Promotions</h4>
+    <% if (company.promotions.length === 0) { %>
+      <p class="text-muted">No promotions found.</p>
+    <% } else { %>
+      <div class="table-responsive mb-4">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Discount</th>
+              <th>Start</th>
+              <th>End</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% company.promotions.forEach(p => { %>
+              <tr>
+                <td><%= p.title %></td>
+                <td><%= p.description %></td>
+                <td><%= p.discount %>%</td>
+                <td><%= new Date(p.startDate).toLocaleDateString() %></td>
+                <td><%= new Date(p.endDate).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+    <!-- Alerts -->
+    <h4 class="mb-3">Recent Alerts</h4>
+    <% if (company.alerts.length === 0) { %>
+      <p class="text-muted">No alerts found.</p>
+    <% } else { %>
+      <div class="table-responsive mb-4">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Type</th>
+              <th>Message</th>
+              <th>Severity</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% company.alerts.forEach(a => { %>
+              <tr>
+                <td><%= a.type %></td>
+                <td><%= a.message %></td>
+                <td>
+                  <span class="badge bg-<%= a.severity === 'HIGH' ? 'danger' : a.severity === 'MEDIUM' ? 'warning' : 'secondary' %>">
+                    <%= a.severity %>
+                  </span>
+                </td>
+                <td><%= new Date(a.createdAt).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+    <!-- Snapshots -->
+    <h4 class="mb-3">Historical Snapshots</h4>
+    <% if (company.snapshots.length === 0) { %>
+      <p class="text-muted">No snapshots found.</p>
+    <% } else { %>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Revenue</th>
+              <th>Traffic</th>
+              <th>Conversion Rate</th>
+              <th>Market Activity</th>
+              <th>Growth Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% company.snapshots.forEach(s => { %>
+              <tr>
+                <td><%= new Date(s.snapshotDate).toLocaleDateString() %></td>
+                <td>$<%= s.revenue.toLocaleString() %></td>
+                <td><%= s.traffic.toLocaleString() %></td>
+                <td><%= s.conversionRate.toFixed(2) %>%</td>
+                <td><%= s.marketActivityScore.toFixed(1) %></td>
+                <td><%= s.growthSignalScore.toFixed(1) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>
